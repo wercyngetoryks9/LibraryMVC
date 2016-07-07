@@ -13,13 +13,16 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         public int UserId { get; set; }
 
         [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Birth Date")]
         public DateTime BirthDate { get; set; }
 
         [Required]
@@ -32,6 +35,7 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         public string Phone { get; set; }
 
         [Required]
+        [Display(Name = "Active")]
         public bool IsActive { get; set; }
     }
 }

@@ -64,8 +64,8 @@ namespace WebModelService.UserModel
             {
                 var userList = from u in context.Users
                                join b1 in context.Borrows on u.UserId equals b1.UserId into borrowedCount
-                               from b in borrowedCount.DefaultIfEmpty()
-                               //from b in context.Borrows.Where(x => x.UserId == u.UserId).DefaultIfEmpty()
+                               from b in borrowedCount.DefaultIfEmpty().GroupBy(x => x.UserId)
+                                   //from b in context.Borrows.Where(x => x.UserId == u.UserId).DefaultIfEmpty()
                                select new UserViewModel
                                {
                                    UserId = u.UserId,
@@ -77,7 +77,7 @@ namespace WebModelService.UserModel
                                    AddDate = u.AddDate,
                                    ModifiedDate = u.ModifiedDate,
                                    BorrowedCount = borrowedCount.Count(),
-                                   IsActive = u.IsActive                                  
+                                   IsActive = u.IsActive
                                };
 
                 return userList.ToList();
