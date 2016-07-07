@@ -13,12 +13,15 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         public int UserId { get; set; }
 
         [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Required]
+        [Display(Name = "Birth Date")]
         public DateTime BirthDate { get; set; }
 
         [Required]
