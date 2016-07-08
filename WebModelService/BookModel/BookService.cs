@@ -9,25 +9,44 @@ namespace WebModelService.BookModel
 {
     public class BookService : IBookService
     {
+        public BookViewModel GetBook(int id)
+        {
+            return null;
+        }
+
+        public BookViewModelEdit GetBookEdit(int id)
+        {
+            return null;
+        }
+
         public IList<BookViewModel> GetBooks()
         {
             return null;
         }
+
+        public IList<BookViewModelHistory> GetBookDetailsHistory(int id)
+        {
+            return null;
+        }
+
+        public IList<BookViewModelStatus> GetBookDetailsStatus(int id)
+        {
+            return null;
+        }
+
         public BookViewModel GetBookDetails(int id)
         {
             return null;
         }
-        public BookViewModel AddBook()
+
+        public void AddBook(BookViewModelCreate user)
         {
-            return null;
+
         }
-        public BookViewModel EditBook(int id)
+
+        public void EditBook(BookViewModelEdit user)
         {
-            return null;
-        }
-        public BookViewModel DeleteBook(int id)
-        {
-            return null;
+
         }
     }
 }

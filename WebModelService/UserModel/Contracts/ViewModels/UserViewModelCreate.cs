@@ -13,23 +13,23 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         public int UserId { get; set; }
 
         [Required]
-        [Display(Name = "First Name")]
+        [Display(Name = "First Name"), StringLength(100)]
         public string FirstName { get; set; }
 
         [Required]
-        [Display(Name = "Last Name")]
+        [Display(Name = "Last Name"), StringLength(100)]
         public string LastName { get; set; }
 
         [Required]
-        [Display(Name = "Birth Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
 
         [Required]
-        [EmailValidation(ErrorMessage = "The Email Address already exists"), StringLength(50)]
+        [EmailValidation(ErrorMessage = "The Email Address already exists"), StringLength(100)]
         [RegularExpression("^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*\\.([a-z]{2,4})$", ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
 
-        [Required]
+        [Phone, StringLength(50)]
         public string Phone { get; set; }
     }
 }

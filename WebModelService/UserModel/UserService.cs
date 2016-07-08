@@ -18,20 +18,20 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                var user = context.Users.SingleOrDefault(x => x.UserId == id);
-                UserViewModel usVM = new UserViewModel();
+                //var user = context.Users.SingleOrDefault(x => x.UserId == id);
+                var user = context.Users.Where(x => x.UserId == id)
+                                        .Select(x => new UserViewModel
+                                        {
+                                            UserId = x.UserId,
+                                            FirstName = x.FirstName,
+                                            LastName = x.LastName,
+                                            BirthDate = x.BirthDate,
+                                            Email = x.Email,
+                                            Phone = x.Phone,
+                                            IsActive = x.IsActive
+                                        }).SingleOrDefault();
 
-                usVM.UserId = user.UserId;
-                usVM.FirstName = user.FirstName;
-                usVM.LastName = user.LastName;
-                usVM.BirthDate = user.BirthDate;
-                usVM.Email = user.Email;
-                usVM.Phone = user.Phone;
-                //usVM.AddDate = user.AddDate;
-                //usVM.ModifiedDate = user.ModifiedDate;
-                usVM.IsActive = user.IsActive;
-
-                return usVM;
+                return user;
             }
         }
 
@@ -40,6 +40,7 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
+                /*
                 var user = context.Users.SingleOrDefault(x => x.UserId == id);
                 UserViewModelEdit usVM = new UserViewModelEdit();
 
@@ -49,11 +50,23 @@ namespace WebModelService.UserModel
                 usVM.BirthDate = user.BirthDate;
                 usVM.Email = user.Email;
                 usVM.Phone = user.Phone;
-                //usVM.AddDate = user.AddDate;
-                //usVM.ModifiedDate = user.ModifiedDate;
                 usVM.IsActive = user.IsActive;
 
                 return usVM;
+                */
+                var user = context.Users.Where(x => x.UserId == id)
+                                        .Select(x => new UserViewModelEdit
+                                        {
+                                            UserId = x.UserId,
+                                            FirstName = x.FirstName,
+                                            LastName = x.LastName,
+                                            BirthDate = x.BirthDate,
+                                            Email = x.Email,
+                                            Phone = x.Phone,
+                                            IsActive = x.IsActive
+                                        }).SingleOrDefault();
+
+                return user;
             }
         }
 
@@ -62,22 +75,22 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                var userList = from u in context.Users
-                               join b1 in context.Borrows on u.UserId equals b1.UserId into borrowedCount
-                               from b in borrowedCount.DefaultIfEmpty().GroupBy(x => x.UserId)
+                var userList = from user in context.Users
+                               join borrows in context.Borrows on user.UserId equals borrows.UserId into borrowedCount
+                               from borrowsTemp in borrowedCount.DefaultIfEmpty().GroupBy(x => x.UserId)
                                    //from b in context.Borrows.Where(x => x.UserId == u.UserId).DefaultIfEmpty()
                                select new UserViewModel
                                {
-                                   UserId = u.UserId,
-                                   FirstName = u.FirstName,
-                                   LastName = u.LastName,
-                                   BirthDate = u.BirthDate,
-                                   Email = u.Email,
-                                   Phone = u.Phone,
-                                   AddDate = u.AddDate,
-                                   ModifiedDate = u.ModifiedDate,
+                                   UserId = user.UserId,
+                                   FirstName = user.FirstName,
+                                   LastName = user.LastName,
+                                   BirthDate = user.BirthDate,
+                                   Email = user.Email,
+                                   Phone = user.Phone,
+                                   AddDate = user.AddDate,
+                                   ModifiedDate = user.ModifiedDate,
                                    BorrowedCount = borrowedCount.Count(),
-                                   IsActive = u.IsActive
+                                   IsActive = user.IsActive
                                };
 
                 return userList.ToList();
@@ -135,7 +148,7 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                User userFromDB = context.Users.Single(u => u.UserId == id);
+                User userFromDB = context.Users.Single(user => user.UserId == id);
                 userFromDB.IsActive = false;
 
                 context.SaveChanges();
@@ -147,20 +160,20 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                var userDetailList = from u in context.Users
-                                     where u.UserId == id
-                                     join bor in context.Borrows on u.UserId equals bor.UserId
-                                     where bor.IsReturned == false
-                                     join boo in context.Books on bor.BookId equals boo.BookId
+                var userDetailList = from users in context.Users
+                                     where users.UserId == id
+                                     join borrows in context.Borrows on users.UserId equals borrows.UserId
+                                     where borrows.IsReturned == false
+                                     join books in context.Books on borrows.BookId equals books.BookId
                                      select new UserViewModelBorrowed
                                      {
-                                         UserId = u.UserId,
-                                         FirstName = u.FirstName,
-                                         LastName = u.LastName,
-                                         Phone = u.Phone,
-                                         Book = boo.Title,
-                                         FromDate = bor.FromDate,
-                                         ToDate = bor.ToDate
+                                         UserId = users.UserId,
+                                         FirstName = users.FirstName,
+                                         LastName = users.LastName,
+                                         Phone = users.Phone,
+                                         Book = books.Title,
+                                         FromDate = borrows.FromDate,
+                                         ToDate = borrows.ToDate
                                      };
                 return userDetailList.ToList();
             };
@@ -172,20 +185,20 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                var userDetailList = from u in context.Users
-                                     where u.UserId == id
-                                     join bor in context.Borrows on u.UserId equals bor.UserId
-                                     where bor.IsReturned == true
-                                     join boo in context.Books on bor.BookId equals boo.BookId
+                var userDetailList = from users in context.Users
+                                     where users.UserId == id
+                                     join borrows in context.Borrows on users.UserId equals borrows.UserId
+                                     where borrows.IsReturned == true
+                                     join books in context.Books on borrows.BookId equals books.BookId
                                      select new UserViewModelBorrowed
                                      {
-                                         UserId = u.UserId,
-                                         FirstName = u.FirstName,
-                                         LastName = u.LastName,
-                                         Phone = u.Phone,
-                                         Book = boo.Title,
-                                         FromDate = bor.FromDate,
-                                         ToDate = bor.ToDate
+                                         UserId = users.UserId,
+                                         FirstName = users.FirstName,
+                                         LastName = users.LastName,
+                                         Phone = users.Phone,
+                                         Book = books.Title,
+                                         FromDate = borrows.FromDate,
+                                         ToDate = borrows.ToDate
                                      };
                 return userDetailList.ToList();
             };

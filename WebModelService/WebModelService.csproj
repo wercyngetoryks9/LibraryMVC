@@ -59,6 +59,10 @@
     <Compile Include="BookModel\BookService.cs" />
     <Compile Include="BookModel\Contracts\DTOs\BookDTO.cs" />
     <Compile Include="BookModel\Contracts\ViewModels\BookViewModel.cs" />
+    <Compile Include="BookModel\Contracts\ViewModels\BookViewModelCreate.cs" />
+    <Compile Include="BookModel\Contracts\ViewModels\BookViewModelEdit.cs" />
+    <Compile Include="BookModel\Contracts\ViewModels\BookViewModelHistory.cs" />
+    <Compile Include="BookModel\Contracts\ViewModels\BookViewModelStatus.cs" />
     <Compile Include="UserModel\Contracts\DTOs\UserDTO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
