@@ -17,23 +17,13 @@ namespace WebModelService.BookModel.Contracts.ViewModels
 
         public string Title { get; set; }
 
-        [Display(Name = "Release")]
-        public DateTime? ReleaseDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? Release { get; set; }
 
         public string ISBN { get; set; }
 
-        [ForeignKey("BookGenreId")]
-        public int BookGenreId { get; set; }
+        public int Genre { get; set; }
 
         public int Count { get; set; }
-
-        public DateTime AddDate { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
-
-        //public virtual DictBookGenre DictBookGenre { get; set; }
-
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<Borrow> Borrows { get; set; }
     }
 }

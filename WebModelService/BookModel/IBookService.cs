@@ -7,7 +7,7 @@ using WebModelService.BookModel.Contracts.ViewModels;
 
 namespace WebModelService.BookModel
 {
-    interface IBookService
+    public interface IBookService
     {
         BookViewModel GetBook(int id);
         BookViewModelEdit GetBookEdit(int id);

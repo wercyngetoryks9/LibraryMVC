@@ -1,0 +1,37 @@
+﻿@model IEnumerable<WebModelService.BookModel.Contracts.ViewModels.BookViewModel>
+
+@(Html.Kendo().Grid<WebModelService.BookModel.Contracts.ViewModels.BookViewModel>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(book => book.BookId);
+            columns.Bound(book => book.Author);
+            columns.Bound(book => book.Title);
+            columns.Bound(book => book.Released);
+            columns.Bound(book => book.ISBN);
+            columns.Bound(book => book.Genre);
+            columns.Bound(book => book.Count);
+            columns.Bound(book => book.Added);
+            columns.Bound(book => book.Modified);
+            columns.Command(command => { command.Edit(); });
+        })
+        .ToolBar(toolbar => toolbar.Create())
+        .Editable(editable => editable.Mode(GridEditMode.PopUp))
+        //.HtmlAttributes(new { style = "height: 550px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(book => book.BookId))
+            .Create(update => update.Action("CreateWindow", "Book"))
+            .Read(read => read.Action("GetBooks", "Book"))
+            .Update(update => update.Action("Edit", "Book"))
+            .PageSize(20)
+        )
+)
+

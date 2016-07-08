@@ -10,6 +10,7 @@ namespace DataService
         public EntityModel()
             : base("name=LibraryEntity")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<Book> Books { get; set; }

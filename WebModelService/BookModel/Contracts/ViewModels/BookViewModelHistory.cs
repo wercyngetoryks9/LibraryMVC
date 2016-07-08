@@ -18,6 +18,7 @@ namespace WebModelService.BookModel.Contracts.ViewModels
         public string Title { get; set; }
 
         [Display(Name = "Release")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? ReleaseDate { get; set; }
 
         public string ISBN { get; set; }
@@ -27,13 +28,10 @@ namespace WebModelService.BookModel.Contracts.ViewModels
 
         public int Count { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime AddDate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? ModifiedDate { get; set; }
-
-        //public virtual DictBookGenre DictBookGenre { get; set; }
-
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<Borrow> Borrows { get; set; }
     }
 }

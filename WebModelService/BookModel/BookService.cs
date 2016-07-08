@@ -21,7 +21,25 @@ namespace WebModelService.BookModel
 
         public IList<BookViewModel> GetBooks()
         {
-            return null;
+            using (DataService.EntityModel context = new DataService.EntityModel())
+            {
+                var bookList = from book in context.Books
+                               join bookGenre in context.DictBookGenres on book.BookGenreId equals bookGenre.BookGenreId
+                               select new BookViewModel
+                               {
+                                    BookId = book.BookId,
+                                    Author = book.Author,
+                                    Title = book.Title,
+                                    Released = book.ReleaseDate,
+                                    ISBN = book.ISBN,
+                                    Genre = bookGenre.Name,
+                                    Count = book.Count,
+                                    Added = book.AddDate,
+                                    Modified = book.ModifiedDate
+                               };
+
+                return bookList.ToList();
+            }
         }
 
         public IList<BookViewModelHistory> GetBookDetailsHistory(int id)

@@ -18,10 +18,8 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                //var user = context.Users.SingleOrDefault(x => x.UserId == id);
-                var user = context.Users.Where(x => x.UserId == id)
-                                        .Select(x => new UserViewModel
-                                        {
+                var user = context.Users.Select(x => new UserViewModel
+                                         {
                                             UserId = x.UserId,
                                             FirstName = x.FirstName,
                                             LastName = x.LastName,
@@ -29,7 +27,8 @@ namespace WebModelService.UserModel
                                             Email = x.Email,
                                             Phone = x.Phone,
                                             IsActive = x.IsActive
-                                        }).SingleOrDefault();
+                                         })
+                                         .Where(x => x.UserId == id).SingleOrDefault();
 
                 return user;
             }
@@ -54,9 +53,8 @@ namespace WebModelService.UserModel
 
                 return usVM;
                 */
-                var user = context.Users.Where(x => x.UserId == id)
-                                        .Select(x => new UserViewModelEdit
-                                        {
+                var user = context.Users.Select(x => new UserViewModelEdit
+                                         {
                                             UserId = x.UserId,
                                             FirstName = x.FirstName,
                                             LastName = x.LastName,
@@ -64,7 +62,8 @@ namespace WebModelService.UserModel
                                             Email = x.Email,
                                             Phone = x.Phone,
                                             IsActive = x.IsActive
-                                        }).SingleOrDefault();
+                                         })
+                                         .Where(x => x.UserId == id).SingleOrDefault();
 
                 return user;
             }

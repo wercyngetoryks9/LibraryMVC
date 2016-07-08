@@ -25,7 +25,7 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         }
 
         [Display(Name = "Birth Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
 
         [EmailAddress]
@@ -35,11 +35,11 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         public string Phone { get; set; }
 
         [Display(Name = "Add Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime AddDate { get; set; }
 
         [Display(Name = "Modified")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? ModifiedDate { get; set; }
 
         [Display(Name = "Books Borrowed")]
