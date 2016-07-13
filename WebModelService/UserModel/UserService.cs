@@ -39,20 +39,6 @@ namespace WebModelService.UserModel
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
-                /*
-                var user = context.Users.SingleOrDefault(x => x.UserId == id);
-                UserViewModelEdit usVM = new UserViewModelEdit();
-
-                usVM.UserId = user.UserId;
-                usVM.FirstName = user.FirstName;
-                usVM.LastName = user.LastName;
-                usVM.BirthDate = user.BirthDate;
-                usVM.Email = user.Email;
-                usVM.Phone = user.Phone;
-                usVM.IsActive = user.IsActive;
-
-                return usVM;
-                */
                 var user = context.Users.Select(x => new UserViewModelEdit
                                          {
                                             UserId = x.UserId,

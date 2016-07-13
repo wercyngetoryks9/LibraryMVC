@@ -63,6 +63,8 @@
     <Compile Include="BookModel\Contracts\ViewModels\BookViewModelEdit.cs" />
     <Compile Include="BookModel\Contracts\ViewModels\BookViewModelHistory.cs" />
     <Compile Include="BookModel\Contracts\ViewModels\BookViewModelStatus.cs" />
+    <Compile Include="BorrowModel\BorrowService.cs" />
+    <Compile Include="BorrowModel\IBorrowService.cs" />
     <Compile Include="UserModel\Contracts\DTOs\UserDTO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,7 +72,7 @@
     <Compile Include="UserModel\Contracts\ViewModels\UserViewModel.cs" />
     <Compile Include="UserModel\Contracts\ViewModels\UserViewModelCreate.cs" />
     <Compile Include="UserModel\Contracts\ViewModels\UserViewModelEdit.cs" />
-    <Compile Include="UserModel\Contracts\ViewModels\UserViewModeloBrrowed.cs" />
+    <Compile Include="UserModel\Contracts\ViewModels\UserViewModelBorrowed.cs" />
     <Compile Include="UserModel\EmailValidation.cs" />
     <Compile Include="UserModel\IUserService.cs" />
     <Compile Include="UserModel\UserService.cs" />
@@ -79,7 +81,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BorrowModel\Contracts\DTOs\" />
+    <Folder Include="BorrowModel\Contracts\ViewModels\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataService\DataService.csproj">
       <Project>{ecc1b856-0367-4073-9468-b835c4a00e93}</Project>

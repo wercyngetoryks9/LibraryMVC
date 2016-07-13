@@ -13,25 +13,28 @@ namespace WebModelService.BookModel.Contracts.ViewModels
         [Key]
         public int BookId { get; set; }
 
+        [Required]
+        [StringLength(200)]
         public string Author { get; set; }
 
+        [Required]
+        [StringLength(200)]
         public string Title { get; set; }
 
+        [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Release")]
-        public DateTime? ReleaseDate { get; set; }
+        public DateTime? Release { get; set; }
 
+        [Required]
+        [StringLength(17)]
         public string ISBN { get; set; }
 
-        [ForeignKey("BookGenreId")]
-        public int BookGenreId { get; set; }
+        [Required]
+        [Range(1, 1000)]
+        public int Genre { get; set; }
 
+        [Required]
+        [Range(1, 1000)]
         public int Count { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime AddDate { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? ModifiedDate { get; set; }
     }
 }

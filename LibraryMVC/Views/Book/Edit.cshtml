@@ -1,12 +1,15 @@
-﻿@model WebModelService.BookModel.Contracts.ViewModels.BookViewModelCreate
+﻿@model WebModelService.BookModel.Contracts.ViewModels.BookViewModelEdit
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form-add"}))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form-edit" }))
 {
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Add Book</h4>
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+        <h4>Book Edition</h4>
         <hr />
+ 
+        @Html.HiddenFor(model => model.BookId)
+
         <div class="form-group">
             @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -57,34 +60,34 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Add" id="btn-add-submit" class="btn btn-default" />
+                <input type="button" value="Edit" id="btn-edit-submit" class="btn btn-default" />
             </div>
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Cancel" id="btn-add-cancel" class="btn btn-default" />
+                <input type="button" value="Cancel" id="btn-edit-cancel" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <script type="text/javascript">
-    //$(document).ready(function () {
     $(function () {
-        $('#btn-add-submit').click(function () {
-            var url = '@Url.Action("Create")';
-            var formData = $('#form-add').serialize();
+        $('#btn-edit-submit').click(function () {
+            var url = '@Url.Action("Edit", "Book")';
+            var formData = $('#form-edit').serialize();
+
             $.post(url, formData, function (data) {
                 if (data.isDone) {
-                    $('#form-add').closest('#windowAdd').data('kendoWindow').close();
+                    $('#form-edit').closest('#windowEditDetails').data('kendoWindow').close();
                     $('#grid').data('kendoGrid').dataSource.read().refresh();
                 }
                 else {
-                    $('#form-add').closest('#windowAdd').html(data);
+                    $('#form-edit').closest('#windowEditDetails').html(data);
                 }
             });
         });
 
-        $('#btn-add-cancel').click(function () {
-            $('#form-add').closest('#windowAdd').data('kendoWindow').close();
+        $('#btn-edit-cancel').click(function () {
+            $('#form-edit').closest('#windowEditDetails').data('kendoWindow').close();
         })
     })
 </script>

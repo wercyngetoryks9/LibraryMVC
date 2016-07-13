@@ -28,28 +28,4 @@ namespace WebModelService.UserModel
             }
         }
     }
-    /*
-    public class IdValidation : ValidationAttribute
-    {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            using (DataService.EntityModel context = new DataService.EntityModel())
-            {
-                if (value != null)
-                {
-                    var valueAsString = value.ToString();
-                    //var valueAsInt = Int64.Parse(valueAsString);
-                    Console.WriteLine(valueAsString);
-                    IEnumerable<int> userId = context.Users.Where(x => x.UserId != null).Select(x => x.UserId);
-                    if (userId.Equals(valueAsString))
-                    {
-                        var errorMessage = FormatErrorMessage(validationContext.DisplayName);
-                        return new ValidationResult(errorMessage);
-                    }
-                }
-                return ValidationResult.Success;
-            }
-        }
-    }
-    */
 }

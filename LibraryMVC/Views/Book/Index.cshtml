@@ -1,10 +1,15 @@
 ﻿@model IEnumerable<WebModelService.BookModel.Contracts.ViewModels.BookViewModel>
 
+<p>
+    <input type="submit" value="Add" id ="btn-add-window" class="btn btn-default" />
+</p>
+
 @(Html.Kendo().Grid<WebModelService.BookModel.Contracts.ViewModels.BookViewModel>()
         .Name("grid")
+        .HtmlAttributes(new { style = "height: 550px;" })
         .Columns(columns =>
         {
-            columns.Bound(book => book.BookId);
+            columns.Bound(book => book.BookId).Hidden();
             columns.Bound(book => book.Author);
             columns.Bound(book => book.Title);
             columns.Bound(book => book.Released);
@@ -13,11 +18,15 @@
             columns.Bound(book => book.Count);
             columns.Bound(book => book.Added);
             columns.Bound(book => book.Modified);
-            columns.Command(command => { command.Edit(); });
+            columns.Bound(book => book.BookId)
+                   .Title("Edit")
+                   .ClientTemplate("#= bookEditTemplate(data) #")
+                   .Width(60);
+            columns.Bound(book => book.BookId)
+                   .Title("Details")
+                   .ClientTemplate("#= bookDetailsTemplate(data) #")
+                   .Width(75);
         })
-        .ToolBar(toolbar => toolbar.Create())
-        .Editable(editable => editable.Mode(GridEditMode.PopUp))
-        //.HtmlAttributes(new { style = "height: 550px;" })
         .Scrollable()
         .Groupable()
         .Sortable()
@@ -28,10 +37,142 @@
         .DataSource(dataSource => dataSource
             .Ajax()
             .Model(model => model.Id(book => book.BookId))
-            .Create(update => update.Action("CreateWindow", "Book"))
             .Read(read => read.Action("GetBooks", "Book"))
-            .Update(update => update.Action("Edit", "Book"))
             .PageSize(20)
         )
 )
+
+<!--Add Book Window-->
+
+@(Html.Kendo().Window()
+    .Name("windowAdd")
+    .Title("Add Book")
+    .Actions(actions => actions
+        .Custom("custom")
+        .Minimize()
+        .Maximize()
+        //.Close()
+    )
+    .Modal(true)
+    .Content("Loading form...")
+    .LoadContentFrom("Create", "Book")
+    .Draggable()
+    .Resizable()
+    .Visible(false)
+    .Width(500)
+)
+
+<!--Edit Details Book Window-->
+
+@(Html.Kendo().Window()
+    .Name("windowEditDetails")
+    .Title("Edit Book")
+    .Actions(actions => actions
+        .Custom("custom")
+        .Minimize()
+        .Maximize()
+        //.Close()
+    )
+    .Modal(true)
+    .Draggable()
+    .Resizable()
+    .Visible(false)
+    //.Width(500)
+)
+
+<script type="text/javascript">
+
+    // TEMPLATES
+    function bookEditTemplate(data) {
+        var html = kendo.format("<input type='submit' value='Edit' id='btn-edit-window' onclick=bookEdit({0}) />", data.BookId);
+        return html;
+    }
+
+    function bookDetailsTemplate(data) {
+        var html = kendo.format("<input type='submit' value='Details' id='btn-details-view' onclick=bookDetails({0}) />", data.BookId);
+        return html;
+    }
+
+    // NAMED FUNCTIONS
+    function bookEdit(bookId) {
+        var wnd = $('#windowEditDetails').data('kendoWindow');
+        var url = '@Url.Action("Edit", "Book")' + "/" + bookId;
+
+        wnd = $('#windowEditDetails')
+                    .kendoWindow({
+                        title: "Book Edition",
+                        modal: true,
+                        visible: false,
+                        //loadContentFrom: url,
+                        content: url
+                    }).data("kendoWindow").title("Edit");
+
+        wnd.center().open();
+    }
+
+    function bookDetails(bookId) {
+        var wnd = $('#windowEditDetails').data('kendoWindow');
+        var url = '@Url.Action("Details", "Book")' + "/" + bookId;
+
+        $.get(url, function () {
+            wnd = $('#windowEditDetails')
+                    .kendoWindow({
+                        title: "Book Details",
+                        modal: true,
+                        visible: false,
+                        width: "800px",
+                        //height: "600px",
+                        content: url
+                    }).data("kendoWindow").title("Details");
+
+            wnd.center().open();
+        })
+        //$.ajax({
+        //    url: url,
+        //    dataType: "html",
+        //    data: { id: bookId },
+        //    success: function (view) {
+        //        window.location.href = url;
+        //    }
+        //});
+
+    }
+
+    $(function (data) {
+        var wnd = $('#windowAdd').data('kendoWindow');
+
+        $('#btn-add-window').click(function () {
+            wnd.center().open();
+        });
+
+        @*
+        $("#btn-edit-window").click(function (bookId) {
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+            var bookId = dataItem.BookId;
+            var url = '@Url.Action("Edit", "Book")' + "/" + bookId;
+
+            wnd = $("#window")
+                        .kendoWindow({
+                            title: "Book edition",
+                            modal: true,
+                            visible: false,
+                            content: url
+                        }).data("kendoWindow").title("Edit");
+
+            wnd.center().open();
+        });
+        *@
+        @*
+        $("#btn-details-window").click(function (e) {
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+            var bookId = dataItem.BookId;
+            var url = '@Url.Action("Details", "Book")' + "/" + bookId;
+
+            wnd.getKendoWindow().content(url).data("kendoWindow");
+            wnd.center().open();
+        });
+        *@
+    });
+
+</script>
 

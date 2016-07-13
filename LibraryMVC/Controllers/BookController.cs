@@ -36,13 +36,7 @@ namespace LibraryMVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return PartialView();
-        }
-
-        [HttpGet]
-        public ActionResult CreateWindow()
-        {
-            return View();
+            return PartialView("Create");
         }
 
         // POST
@@ -52,10 +46,12 @@ namespace LibraryMVC.Controllers
             if (ModelState.IsValid)
             {
                 this.bookService.AddBook(book);
-                return RedirectToAction("Index");
+                return Json(new { isDone = true });
             }
-
-            return View(book);
+            else
+            {
+                return PartialView(book);
+            }
         }
 
         ////////// EDIT ///////////
@@ -64,20 +60,42 @@ namespace LibraryMVC.Controllers
         public ActionResult Edit(int id)
         {
             BookViewModelEdit viewModel = this.bookService.GetBookEdit(id);
-            return View(viewModel);
+            
+            return PartialView("Edit", viewModel);
         }
 
         // POST
         [HttpPost]
-        public ActionResult Edit(BookViewModelEdit user)
+        public ActionResult Edit(BookViewModelEdit book)
         {
             if (ModelState.IsValid)
             {
-                this.bookService.EditBook(user);
-                return RedirectToAction("Index");
+                this.bookService.EditBook(book);
+                return Json(new { isDone = true });
             }
+            else
+            {
+                return PartialView(book);
+            }
+        }
 
-            return View(user);
+        ////////////    DETAILS     /////////////
+
+        [HttpGet]
+        public ActionResult Details(int id)
+        {
+            ViewBag.id = id;
+            return PartialView("Details");
+        }
+
+        public ActionResult DetailsStatus(int id)
+        {
+            return PartialView(this.bookService.GetBookDetailsStatus(id));
+        }
+
+        public ActionResult DetailsHistory(int id)
+        {
+            return PartialView(this.bookService.GetBookDetailsHistory(id));
         }
     }
 }

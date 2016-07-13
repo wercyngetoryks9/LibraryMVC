@@ -1,0 +1,28 @@
+﻿<h2>Book details</h2>
+
+<div class="form-horizontal">
+    <h4>Actual State</h4>
+        
+    @{Html.RenderAction("DetailsStatus", new { id = ViewBag.id });}
+</div>
+
+<div class="form-horizontal">
+    <h4>Borrows History</h4>
+
+    @{Html.RenderAction("DetailsHistory", new { id = ViewBag.id });}
+</div>
+
+<div class="col-md-offset-2 col-md-10">
+    <input type="button" value="Cancel" id="btn-details-cancel" class="btn btn-default" />
+</div>
+
+<script>
+    $(function () {
+        $('#btn-details-cancel').click(function () {
+            $('#windowEditDetails').data('kendoWindow').close();
+        })
+    })
+</script>
+
+
+

@@ -17,21 +17,41 @@ namespace WebModelService.BookModel.Contracts.ViewModels
 
         public string Title { get; set; }
 
-        [Display(Name = "Release")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? ReleaseDate { get; set; }
+        public DateTime? Release { get; set; }
 
         public string ISBN { get; set; }
 
-        [ForeignKey("BookGenreId")]
-        public int BookGenreId { get; set; }
+        public int Genre { get; set; }
 
         public int Count { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime AddDate { get; set; }
+        public DateTime Added { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime? Modified { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string UserName
+        {
+            get { return this.LastName + " " + this.FirstName; }
+        }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? From { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? To { get; set; }
+        
+        public int Borrowed { get; set; }
+
+        public int State
+        {
+            get { return this.Count - this.Borrowed; }
+        }
     }
 }

@@ -92,11 +92,13 @@ namespace LibraryMVC.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult DetailsActual(int id)
         {           
             return PartialView(this.userService.GetUserDetailsActual(id));
         }
 
+        [HttpGet]
         public ActionResult DetailsHistory(int id)
         {
             return PartialView(this.userService.GetUserDetailsHistory(id));
