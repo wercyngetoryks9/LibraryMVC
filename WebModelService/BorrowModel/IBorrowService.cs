@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebModelService.BorrowModel.Contracts.ViewModels;
 
 namespace WebModelService.BorrowModel
 {
     public interface IBorrowService
     {
-        /*
-        BorrowViewModel GetUser(int id);
-        BorrowUserViewModelEdit GetUserEdit(int id);
-        BorrowBookViewModelEdit GetUserEdit(int id);
-        IList<UserViewModel> GetUsers();
-        IList<UserViewModelBorrowed> GetUserDetailsHistory(int id);
-        IList<UserViewModelBorrowed> GetUserDetailsActual(int id);
-        UserViewModel GetUserDetails(int id);
-        void AddUser(UserViewModelCreate user);
-        void EditUser(UserViewModelEdit user);
-        void DeleteUser(int id);
-        */
+        IList<BorrowViewModel> GetUsersList();
+        IList<BorrowViewModel> GetBooksList();
+        IList<BorrowViewModelTitle> GetTitlesList();
+        IList<BorrowViewModelName> GetNamesList();
+        void AddBorrow(BorrowViewModelCreate borrow);
+        void ReturnBorrows(int[] borrowId);
+        IList<BorrowViewModelUserBooks> ShowUserBooksBorrow(int userId);
     }
 }

@@ -49,7 +49,7 @@ namespace LibraryMVC.Controllers
 
         [HttpGet]
         public ActionResult Edit(int id)
-        {          
+        {                     
             UserViewModelEdit viewModel = this.userService.GetUserEdit(id);
             return View(viewModel);
         }
@@ -60,6 +60,11 @@ namespace LibraryMVC.Controllers
         [HttpPost]
         public ActionResult Edit(UserViewModelEdit user)
         {
+            //if (EmailExist(user.Email))
+            //{
+            //    ModelState.AddModelError("Emial", "Emial already in use");
+            //}
+
             if (ModelState.IsValid)
             {
                 this.userService.EditUser(user);

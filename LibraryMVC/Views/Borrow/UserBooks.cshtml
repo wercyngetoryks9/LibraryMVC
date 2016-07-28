@@ -1,0 +1,110 @@
+﻿@model IEnumerable<WebModelService.BorrowModel.Contracts.ViewModels.BorrowViewModelUserBooks>
+
+<!------------------USER BOOKS---------------------->
+<h2>USER BOOKS</h2>
+
+<div>
+    <table id ="table-user-books" class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.BorrowId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ISBN)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Genre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.From)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.To)
+                </th>
+                <th>
+                    @Html.Label("Return")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td id="id-borrow">
+                        @Html.HiddenFor(modelItem => item.BorrowId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ISBN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.From)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.To)
+                    </td>
+                    <td id="id-checkbox">
+                        <input type="checkbox" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>
+
+    <hr />
+
+    <div class="form-group">
+        <input type="button" value="Remove checked" id="btn-cb-remove-book" class="btn btn-default" />
+        <input type="button" value="Back to Index" id="btn-cb-return-to-index" class="btn btn-default" />
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+        //$("#table-user-books").kendoGrid({
+        //    height: 550,
+        //    sortable: true
+        //});
+
+        $(document).delegate('#btn-cb-return-to-index', 'click', function () {
+            urlIndex = '@Url.Action("Index", "Borrow")';
+            window.location.href = urlIndex;
+        })
+
+        $(document).delegate('#btn-cb-remove-book', 'click', function () {
+            var borrowId = [],
+                item,
+                urlReturn = '@Url.Action("Return", "Borrow")'
+
+            $('#table-user-books').find('input:checked').each(function () {
+                item = $(this).parent().prevAll('#id-borrow').find('input').val();
+                borrowId.push(item);
+                $(this).closest('tr').remove();
+            })
+
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                url: urlReturn,
+                data: { borrowId: borrowId },
+            });
+        })
+    })
+</script>

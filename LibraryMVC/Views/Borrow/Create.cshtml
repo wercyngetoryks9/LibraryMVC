@@ -1,0 +1,64 @@
+﻿@model WebModelService.BorrowModel.Contracts.ViewModels.BorrowViewModelCreate
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form-borrow" }))
+{
+    <div>
+        <table id="table-borrow-books" class="table">
+            <tr>
+                <td>
+                    <label>User</label>
+                </td>
+                <td>                
+                    @(Html.Kendo().DropDownListFor(m => m.UserId)
+                        .Name("ddl-user")
+                        .DataTextField("User")
+                        .DataValueField("UserId")
+                        .OptionLabel("-- Select user --")
+                        //.AutoBind(false)
+                        .DataSource(ds =>
+                        {
+                            ds.Read(read =>
+                            {
+                                read.Action("GetNames", "Borrow");
+                            });
+                        })
+                        .HtmlAttributes(new { style = "width:250px" })
+                    )
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Book1</label>
+                </td>
+                <td>
+                    @(Html.Kendo().DropDownListFor(m => m.BookId[0])
+                        .Name("ddl-book1")
+                        .DataTextField("Title")
+                        .DataValueField("BookId")
+                        .OptionLabel("-- Select book --")
+                        //.AutoBind(false)
+                        .DataSource(ds =>
+                        {
+                            ds.Read(read =>
+                            {
+                                read.Action("GetTitles", "Borrow");
+                            });
+                        })
+                        .Events(e =>
+                        {
+                            e.Select("OnSelect").Change("OnChange");
+                        })
+                        .HtmlAttributes(new { style = "width:250px" })
+                    )
+                </td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <input type="button" value="Add" id="btn-add-ddl-book" class="btn btn-default" />
+            <input type="button" value="Cancel" id="btn-add-cancel" class="btn btn-default" />
+            <input type="button" value="OK" id="btn-add-ok" class="btn btn-default" />
+            <input type="button" value="Remove" id="btn-remove-ddl-book" class="btn btn-default" />
+        </div>
+        <span id="validSpan" />
+    </div>
+}

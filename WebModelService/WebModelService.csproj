@@ -64,7 +64,20 @@
     <Compile Include="BookModel\Contracts\ViewModels\BookViewModelHistory.cs" />
     <Compile Include="BookModel\Contracts\ViewModels\BookViewModelStatus.cs" />
     <Compile Include="BorrowModel\BorrowService.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModel.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelBook.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelCreate.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelName.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelTitle.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelUser.cs" />
+    <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelUserBooks.cs" />
     <Compile Include="BorrowModel\IBorrowService.cs" />
+    <Compile Include="RaportModel\Contracts\DTOs\RaportDTO.cs" />
+    <Compile Include="RaportModel\Contracts\ViewModels\RaportViewModelGenres.cs" />
+    <Compile Include="RaportModel\IRaportService.cs" />
+    <Compile Include="RaportModel\RaportService.cs" />
+    <Compile Include="RaportModel\Contracts\ViewModels\RaportViewModelBooks.cs" />
+    <Compile Include="RaportModel\Contracts\ViewModels\RaportViewModelUsers.cs" />
     <Compile Include="UserModel\Contracts\DTOs\UserDTO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,7 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BorrowModel\Contracts\DTOs\" />
-    <Folder Include="BorrowModel\Contracts\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataService\DataService.csproj">

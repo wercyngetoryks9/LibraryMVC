@@ -1,0 +1,50 @@
+﻿<h2>Raports</h2>
+<hr />
+
+<div class="form-horizontal">
+    <h4>Users Raports</h4>
+    @{Html.RenderAction("UsersRaportIndex", "Raport");}
+</div>
+
+<div class="form-horizontal">    
+    @{Html.RenderPartial("_Filter");}
+</div>
+
+<div class="form-horizontal">
+    @{Html.RenderAction("BooksRaportIndex", "Raport");}
+</div>
+
+<script type="text/javascript">
+
+    function filterGrid() {
+        var genre,
+        title,
+        fromDate,
+        todate,
+        $comboBox,
+        $textBox;
+
+        debugger;
+
+        comboBox = $('#combobox').data('kendoComboBox').value();
+        textBox = $('#textbox').val();
+        fromDate = $('#datepicker1').data('kendoDatePicker').value();
+        toDate = $('#datepicker2').data('kendoDatePicker').value();
+
+        genre = comboBox ? comboBox : ' ';
+        title = textbox ? textBox : ' ';
+
+        return { genre: genre, title: title, fromDate: fromDate, toDate: toDate };
+    }
+
+    $(function () {
+                
+        $(document).delegate('#btn-reset-books-grid', 'click', function () {
+            $('#grid-books-raport').data('kendoGrid').dataSource.read();
+            $('#grid-books-raport').data('kendoGrid').refresh();
+
+        })
+    })
+
+</script>
+

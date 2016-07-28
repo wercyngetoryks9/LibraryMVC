@@ -9,6 +9,9 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using WebModelService.UserModel;
 using WebModelService.BookModel;
+using WebModelService.BorrowModel;
+using WebModelService.RaportModel;
+using DataService;
 
 namespace LibraryMVC
 {
@@ -25,6 +28,9 @@ namespace LibraryMVC
             var builder = new ContainerBuilder();
             builder.RegisterType<UserService>().As<IUserService>().InstancePerDependency();
             builder.RegisterType<BookService>().As<IBookService>().InstancePerDependency();
+            builder.RegisterType<BorrowService>().As<IBorrowService>().InstancePerDependency();
+            builder.RegisterType<RaportService>().As<IRaportService>().InstancePerDependency();
+            builder.RegisterType<EntityModel>().As<EntityModel>().InstancePerDependency();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
             var container = builder.Build();

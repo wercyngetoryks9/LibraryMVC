@@ -1,0 +1,26 @@
+﻿@model IEnumerable<WebModelService.RaportModel.Contracts.ViewModels.RaportViewModelUsers>
+
+@(Html.Kendo().Grid<WebModelService.RaportModel.Contracts.ViewModels.RaportViewModelUsers>()
+        .Name("grid-users-raport")
+        .HtmlAttributes(new { style = "height: 550px;" })
+        .Columns(columns =>
+        {
+            columns.Bound(book => book.UserId).Hidden();
+            columns.Bound(book => book.UserName);
+            columns.Bound(book => book.BorrowsCount);
+        })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Filterable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(book => book.UserId))
+            .Read(read => read.Action("GetUsersRaport", "Raport"))
+            .PageSize(20)
+        )
+)

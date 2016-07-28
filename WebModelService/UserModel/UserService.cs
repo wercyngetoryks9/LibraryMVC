@@ -82,15 +82,6 @@ namespace WebModelService.UserModel
             }
         }
 
-        // Get single user details by id
-        public UserViewModel GetUserDetails(int id)
-        {
-            using (DataService.EntityModel context = new DataService.EntityModel())
-            {
-                return null;
-            }
-        }
-
         // Add user
         public void AddUser(UserViewModelCreate user)
         {
@@ -146,10 +137,9 @@ namespace WebModelService.UserModel
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
                 var userDetailList = from users in context.Users
-                                     where users.UserId == id
                                      join borrows in context.Borrows on users.UserId equals borrows.UserId
-                                     where borrows.IsReturned == false
                                      join books in context.Books on borrows.BookId equals books.BookId
+                                     where users.UserId == id && borrows.IsReturned == false
                                      select new UserViewModelBorrowed
                                      {
                                          UserId = users.UserId,
@@ -171,10 +161,9 @@ namespace WebModelService.UserModel
             using (DataService.EntityModel context = new DataService.EntityModel())
             {
                 var userDetailList = from users in context.Users
-                                     where users.UserId == id
                                      join borrows in context.Borrows on users.UserId equals borrows.UserId
-                                     where borrows.IsReturned == true
                                      join books in context.Books on borrows.BookId equals books.BookId
+                                     where users.UserId == id && borrows.IsReturned == true
                                      select new UserViewModelBorrowed
                                      {
                                          UserId = users.UserId,

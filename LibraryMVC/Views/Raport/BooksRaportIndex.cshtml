@@ -1,0 +1,32 @@
+﻿@model IEnumerable<WebModelService.RaportModel.Contracts.ViewModels.RaportViewModelBooks>
+
+@(Html.Kendo().Grid<WebModelService.RaportModel.Contracts.ViewModels.RaportViewModelBooks>(Model)
+        .Name("grid-books-raport")
+        .HtmlAttributes(new { style = "height: 550px;" })
+        .Columns(columns =>
+        {
+            columns.Bound(book => book.BookId).Hidden();
+            columns.Bound(book => book.Author);
+            columns.Bound(book => book.Title);
+            columns.Bound(book => book.ISBN);
+            columns.Bound(book => book.Genre);
+            columns.Bound(book => book.BorrowsCount
+            );
+        })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(book => book.BookId))
+            .Read(read => read.Action("GetBooksRaport", "Raport").Data("filterGrid"))
+            .PageSize(20)
+        )
+)
+<div>
+    <input type="button" id="btn-reset-books-grid" value="Reset" class="btn btn-default" />
+</div>

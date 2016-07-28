@@ -1,0 +1,54 @@
+﻿@model WebModelService.RaportModel.Contracts.ViewModels.RaportViewModelGenres
+
+<hr />
+<h4>Books Raports</h4>
+
+<div>        
+        <label>Genre:</label>
+        <input id="combobox" />        
+        <label>Title:</label>
+        <input type="text" id="textbox" />
+        <label>From:</label>
+        <input id="datepicker1" />
+        <label>To:</label>
+        <input id="datepicker2" />
+
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        var today = new Date(),
+            urlGenres = '@Url.Action("GetGenresRaport", "Raport")';
+        
+
+        $("#combobox").kendoComboBox({
+            dataValueField: "BookGenreId",
+            dataTextField: "Name",
+            dataSource: {                
+                transport: {
+                    read: urlGenres,
+                    dataType: "json"
+                }
+            },
+            filter: "startswith",
+            suggest: true,
+            placeholder: "--  Select genre  --"
+        });
+
+        $("#datepicker1").kendoDatePicker({
+            start: "year",
+            depth: "month",
+            format: "dd MMMM yyyy",
+            value: today
+        });
+
+        $("#datepicker2").kendoDatePicker({
+            start: "year",
+            depth: "month",
+            format: "dd MMMM yyyy",
+            value: today
+        });
+    })
+</script>

@@ -16,7 +16,6 @@ namespace WebModelService.UserModel
         IList<UserViewModel> GetUsers();
         IList<UserViewModelBorrowed> GetUserDetailsHistory(int id);
         IList<UserViewModelBorrowed> GetUserDetailsActual(int id);
-        UserViewModel GetUserDetails(int id);
         void AddUser(UserViewModelCreate user);
         void EditUser(UserViewModelEdit user);
         void DeleteUser(int id);

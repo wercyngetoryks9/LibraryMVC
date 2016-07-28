@@ -225,6 +225,7 @@
     <Compile Include="Controllers\BorrowController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RaportController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -999,10 +1000,16 @@
     <Content Include="Views\Book\Details.cshtml" />
     <Content Include="Views\Book\DetailsStatus.cshtml" />
     <Content Include="Views\Book\DetailsHistory.cshtml" />
+    <Content Include="Views\Borrow\Index.cshtml" />
+    <Content Include="Views\Borrow\Create.cshtml" />
+    <Content Include="Views\Borrow\UserBooks.cshtml" />
+    <Content Include="Views\Raport\Index.cshtml" />
+    <Content Include="Views\Raport\UsersRaportIndex.cshtml" />
+    <Content Include="Views\Raport\BooksRaportIndex.cshtml" />
+    <Content Include="Views\Raport\_Filter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Borrow\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1013,6 +1020,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataService\DataService.csproj">
+      <Project>{ECC1B856-0367-4073-9468-B835C4A00E93}</Project>
+      <Name>DataService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebModelService\WebModelService.csproj">
       <Project>{565249fc-46ed-472e-a1e3-ad7eb81fb4f0}</Project>
       <Name>WebModelService</Name>

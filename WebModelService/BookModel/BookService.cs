@@ -10,11 +10,6 @@ namespace WebModelService.BookModel
 {
     public class BookService : IBookService
     {
-        public BookViewModel GetBook(int id)
-        {
-            return null;
-        }
-
         public BookViewModelEdit GetBookEdit(int id)
         {
             using (DataService.EntityModel context = new DataService.EntityModel())
@@ -63,10 +58,9 @@ namespace WebModelService.BookModel
             {
                   var bookDetailsList = from books in context.Books
                                                                 .Where(x => x.BookId == id)
-                                        join borrows in context.Borrows on books.BookId equals borrows.BookId
-                                                                where borrows.IsReturned == true
+                                        join borrows in context.Borrows on books.BookId equals borrows.BookId                                                                
                                         join users in context.Users on borrows.UserId equals users.UserId
- 
+                                        where borrows.IsReturned == true
                                         select new BookViewModelHistory
                                         {
                                             BookId = books.BookId,
@@ -93,11 +87,12 @@ namespace WebModelService.BookModel
                 var bookDetailsList = from books in context.Books
                                                                     .Where(x => x.BookId == id)
                                       from borrows in context.Borrows
-                                                                    .Where(x => x.BookId == books.BookId && x.IsReturned == false)
+                                                                    .Where(x => x.BookId == books.BookId)
                                                                     .DefaultIfEmpty()
                                       from users in context.Users
                                                                     .Where(x => x.UserId == borrows.UserId)
-                                                                    .DefaultIfEmpty()                                                                                                               
+                                                                    .DefaultIfEmpty()
+                                      where borrows.IsReturned == false                                                                                                              
                                       select new BookViewModelStatus
                                       {
                                           BookId = books.BookId,

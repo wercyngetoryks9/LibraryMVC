@@ -9,7 +9,6 @@ namespace WebModelService.BookModel
 {
     public interface IBookService
     {
-        BookViewModel GetBook(int id);
         BookViewModelEdit GetBookEdit(int id);
         IList<BookViewModel> GetBooks();
         IList<BookViewModelHistory> GetBookDetailsHistory(int id);

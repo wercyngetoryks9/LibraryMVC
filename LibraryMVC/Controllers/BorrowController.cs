@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Kendo.Mvc.UI;
+using Kendo.Mvc.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebModelService.BorrowModel;
+using WebModelService.BorrowModel.Contracts.ViewModels;
 
 namespace LibraryMVC.Controllers
 {
@@ -18,19 +21,60 @@ namespace LibraryMVC.Controllers
         }
 
         // GET: Borrow
+        [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult UsersIndex()
+        public JsonResult UsersIndex([DataSourceRequest] DataSourceRequest request)
         {
-            return PartialView();
+            return Json(this.borrowService.GetUsersList().ToDataSourceResult(request));
         }
 
-        public ActionResult BooksIndex()
+        public JsonResult BooksIndex([DataSourceRequest] DataSourceRequest request)
         {
-            return PartialView();
+            return Json(this.borrowService.GetBooksList().ToDataSourceResult(request));
+        }
+
+        [HttpGet]
+        public ActionResult Create(BorrowViewModelCreate borrow)
+        {
+            return PartialView("Create");
+        }
+
+        [HttpGet]
+        public JsonResult GetTitles()
+        {
+            return Json(this.borrowService.GetTitlesList(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetNames()
+        {
+            return Json(this.borrowService.GetNamesList(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ActionName("Create")]
+        public ActionResult BorrowBooks(BorrowViewModelCreate model)
+        {
+            this.borrowService.AddBorrow(model);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Return(int[] borrowId)
+        {
+            this.borrowService.ReturnBorrows(borrowId);
+            return new EmptyResult();
+        }
+
+        [HttpGet]
+        public ActionResult ShowUserBooks(int id)
+        {
+            var model = this.borrowService.ShowUserBooksBorrow(id);
+            return View("UserBooks", model);
         }
     }
 }

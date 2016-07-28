@@ -26,6 +26,7 @@ namespace LibraryMVC.Controllers
 
         //////// GET BOOKS //////////
 
+        [HttpPost]
         public ActionResult GetBooks([DataSourceRequest] DataSourceRequest request)
         {           
             return Json(this.bookService.GetBooks().ToDataSourceResult(request));
@@ -88,11 +89,13 @@ namespace LibraryMVC.Controllers
             return PartialView("Details");
         }
 
+        [HttpGet]
         public ActionResult DetailsStatus(int id)
         {
             return PartialView(this.bookService.GetBookDetailsStatus(id));
         }
 
+        [HttpGet]
         public ActionResult DetailsHistory(int id)
         {
             return PartialView(this.bookService.GetBookDetailsHistory(id));

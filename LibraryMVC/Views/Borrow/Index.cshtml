@@ -1,0 +1,512 @@
+﻿@model IEnumerable<WebModelService.BorrowModel.Contracts.ViewModels.BorrowViewModel>
+
+<p>
+    <input type="submit" value="Add" id="btn-add-borrow-window" class="btn btn-default" />
+</p>
+
+<hr />
+
+<!--GRID BOOKS-->
+<h2>BOOKS</h2>
+
+@(Html.Kendo().Grid<WebModelService.BorrowModel.Contracts.ViewModels.BorrowViewModel>()
+        .Name("grid-books")
+        .HtmlAttributes(new { style = "height: 450px;" })
+        .Columns(columns =>
+        {
+            columns.Bound(borrow => borrow.BorrowId).Hidden();
+            columns.Bound(book => book.BookId).Hidden();
+            columns.Bound(book => book.Title);
+            columns.Bound(book => book.Author);
+            columns.Bound(book => book.ISBN);
+            columns.Bound(book => book.Genre);
+            columns.Bound(borrow => borrow.From);
+            columns.Bound(borrow => borrow.To);
+            columns.Bound(book => book.BookId)
+                   .Title("Return")
+                   .ClientTemplate("#= btnBookReturnTemplate(data) #")
+                   .Width(70);            
+        })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(borrow => borrow.BorrowId))
+            .Read(read => read.Action("BooksIndex", "Borrow"))
+            .PageSize(20)
+        )
+)
+
+<hr />
+
+<!--GRID USERS-->
+<h2>USERS</h2>
+
+@(Html.Kendo().Grid<WebModelService.BorrowModel.Contracts.ViewModels.BorrowViewModel>()
+        .Name("grid-users")
+        .HtmlAttributes(new { style = "height: 450px;" })
+        .Columns(columns =>
+        {
+            columns.Bound(borrow => borrow.BorrowId).Hidden();
+            columns.Bound(user => user.UserId).Hidden();
+            columns.Bound(user => user.UserName);
+            columns.Bound(user => user.Email);
+            columns.Bound(user => user.Phone);
+            columns.Bound(user => user.UserId)
+                   .Title("Show books")
+                   .ClientTemplate("#= btnShowUserBorrows(data) #")
+                   .Width(100);
+        })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(borrow => borrow.BorrowId))
+            .Read(read => read.Action("UsersIndex", "Borrow"))
+            .PageSize(20)
+        )
+)
+
+<!--Borrow Window-->
+<div id="window-container">
+</div>
+
+<script type="text/javascript">
+
+    // TEMPLATES
+    function btnBookReturnTemplate(data) {
+        var html = kendo.format("<input type='submit' value='Return' id='btn-remove-book-grid' onclick=bookReturn({0}) />", data.BorrowId);
+        return html;
+    };
+
+    function btnShowUserBorrows(data) {
+        var html = kendo.format("<input type='submit' value='Borrows', id='btn-show-user-borrows-grid' onclick=showUserBorrows({0}) />", data.UserId);
+        return html;
+    }
+
+    function checkBoxReturnTemplate(data) {
+        var html = kendo.format("<input type='checkbox' id='cb-remove-book-grid' />", data.BorrowId);
+        return html;
+    };
+
+    //WINDOW EVENTS
+    function OnSelect(e) {
+        //var dataItem = this.dataItem(e.item.index()+1);
+        //alert("event :: select (" + dataItem.Title + " : " + dataItem.BookId + ")");
+    };
+
+    function OnChange(e) {
+        //var dataItem = this.dataItem(e.item.index());
+        //alert("event :: change (" + dataItem.text + " : " + dataItem.value + ")");
+    };
+
+    //TEMPLATE FUNCTIONS
+    function bookReturn(data) {
+        var urlReturn = '@Url.Action("Return", "Borrow")',
+            $grid = $('#grid-books').data('kendoGrid'),
+            borrowId = [];
+       
+        //dataItem = this.dataItem($(event.currentTarget).closest("tr"));
+        //$grid.dataSource.remove(dataItem);
+        borrowId.push(data);        
+
+        $.ajax({
+            type: "POST",
+            traditional: true,
+            url: urlReturn,
+            data: { borrowId: borrowId },
+            success: function () {
+                $grid.dataSource.read();
+                $grid.refresh();
+            }
+        });       
+    };
+
+    function showUserBorrows(data) {
+
+        var userId = data,
+            urlShowBooks = '@Url.Action("ShowUserBooks", "Borrow")' + "/" + userId;
+ 
+        location.replace(urlShowBooks);
+    }
+
+    $(function () {
+
+        ///////////////////////////////////////////// INDEX VARIABLES //////////////////////////////////////////////
+
+        var url = '@Url.Action("Create", "Borrow")';
+
+        ////// ////////////////////////////////////// CREATE VARIABLES /////////////////////////////////////////////
+
+        var firstLoad = true,
+            removedDdls = 0,
+            validationPassed = 1,
+            counter = 2,
+            fullBookList = {},
+            hashTSelectedBooks,
+            bookToAdd = { value:"", text:"" },
+            lengthSelectedBooks = 0;
+
+        ///////////////////////////////////////////// INDEX FUNCTIONS //////////////////////////////////////////////////        
+
+        $(document).delegate('#btn-add-borrow-window', 'click', function () {
+
+            $("#window-container").append("<div id='window'></div>");
+            var wnd = $('#window').data('kendoWindow');
+
+            if (!wnd) {
+                wnd = $('#window')
+                        .kendoWindow({
+                            width: "450px",
+                            height: "500px",
+                            title: "Borrow",
+                            actions: ["Minimize", "Maximize"],
+                            modal: true,
+                            visible: false,
+                            content: url
+                            //deactivate: function () {
+                            //    this.content("");
+                                //this.destroy();
+                            //}
+                        }).data("kendoWindow");
+            } else {
+                wnd.refresh(url);
+            }
+            wnd.center();
+            wnd.open();
+        });        
+
+        //////////////////////////////////////// CREATE FUNCTIONS /////////////////////////////////////////////
+
+        $(document).delegate('#btn-add-ok', 'click', function () {
+            var urlAdd = '@Url.Action("Create", "Borrow")',
+                BookId = [],
+                userId = $('#ddl-user').data('kendoDropDownList').value(),
+                model;
+
+            $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
+               BookId.push($(this).data('kendoDropDownList').value());
+            });
+
+            model = { BookId: BookId, UserId: userId};
+            $.post(url, model);
+
+            $(this).closest('#window').data('kendoWindow').content('').close();
+            $('#grid-books').data('kendoGrid').dataSource.read().refresh();
+            $('#grid-users').data('kendoGrid').dataSource.read().refresh();
+        });
+
+        $(document).delegate('#btn-add-cancel', 'click', function () {
+            $(this).closest('#window').data('kendoWindow').content('').close();
+            counter = 2;
+        });
+
+        $(document).delegate('#btn-remove-ddl-book', 'click', function () {
+            var object;
+
+            if (removedDdls == 1) {
+
+                object = $('#table-borrow-books tr:last').find('[id^="ddl-book"]').data('kendoDropDownList');
+                bookToAdd.value = object.value();
+                bookToAdd.text = object.text();
+
+                if (counter > 2) {
+
+                    $('#table-borrow-books tr:last').remove();
+                    counter--;
+                }
+
+                $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
+
+                    object = $(this).data('kendoDropDownList');
+                    CorrectDdlData(object, bookToAdd, 'add', AddItem);
+                });
+
+                removedDdls--;
+            }
+            else {
+                if (counter > 2) {
+
+                    $('#table-borrow-books tr:last').remove();
+                    counter--;
+                }
+                removedDdls++;
+            }
+        });
+
+        $(document).delegate('#btn-add-ddl-book', 'click', function () {
+
+            // DDL USER VALIDATE
+            if ($('#ddl-user').data('kendoDropDownList').value() == 0) {
+                $('#validSpan').text("Please select user").css('color', 'red');
+                return false;
+            }
+            else {
+                $('#validSpan').text("");
+            }
+
+            //DDL BOOKS VALIDATE
+            validationPassed = 1;
+            hashTSelectedBooks = new HashTable('');
+
+            $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
+                var value = $(this).val(),
+                    text;
+
+                if (value == 0) {
+                    $('#validSpan').text("Please select books to continue").css('color', 'red');
+                    validationPassed = 0;
+                    hashTSelectedBooks.clear();
+                    return false;
+                }
+                else {
+                    text = $(this).data('kendoDropDownList').text();
+                    hashTSelectedBooks.setItem(value, text);
+                }
+            });
+
+            if (validationPassed) {
+
+                $('#validSpan').text("");
+
+                // APPEND NEW ROW WITH NEW DDL-BOOK VALUE
+                var lastSelector = "#ddl-book" + counter;
+                var lastLabel = "Book" + counter;
+
+                $('#table-borrow-books tr:last').after('<tr><td><label>Book' + counter + '</label></td><td><input id="ddl-book' + counter + '" style="width:250px" /></td></tr>');
+
+                AddDropDownList(counter);
+                counter++;
+            }
+
+            hashTSelectedBooks.each(function (k, v) {
+            });
+        });
+
+        //ADD NEW DDL-BOOK CONTENT
+        function AddDropDownList(num) {
+            var dataBooks,
+                type = 'kendoDropDownList',
+                currDropDownId = '#ddl-book' + num,
+                $prevDropDown = $('#ddl-book' + (num - 1)).data('kendoDropDownList'),
+                url = '@Url.Action("GetTitles", "Borrow")',
+                tableBorrow = '#table-remove-books',
+                booksIds = '[id^="ddl-book"]';
+
+            if (firstLoad) {
+                fullBookList = $('#ddl-book1').data('kendoDropDownList').dataSource.data();
+                firstLoad = false;
+            }
+
+            dataBooks = new kendo.data.DataSource({
+                data: []
+            });
+
+            $(currDropDownId).kendoDropDownList({
+                dataSource: dataBooks,
+                autoBind: false,
+                //transport: {
+                //    read: function (e) {
+                //        e.success(dataBooks);
+                //    }
+                //},
+                dataTextField: "Title",
+                dataValueField: "BookId",
+                optionLabel: "-- Select book --",
+                animation: {
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    },
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    }
+                }
+                //select: OnSelect,
+                //change: OnChange
+                //deactivate: function () {
+                //    this.content("");
+                //    this.destroy();
+                    //kendo.destroy(document.body);
+                    //$(this.element).empty();
+                //}
+            });
+
+            var $currDropDown = $(currDropDownId).data('kendoDropDownList');
+            CopyItem($prevDropDown, $currDropDown);
+            CorrectDdlData($currDropDown, hashTSelectedBooks, 'remove', RemoveItem);
+
+            if (counter > 2) {
+                var prevCounter = counter - 2;
+
+                for(var i = prevCounter; i >= 0; i--) {
+                    $('#table-borrow-books').find('[id="ddl-book' + prevCounter + '"]').each(function() {
+
+                        CorrectDdlData($('#ddl-book' + prevCounter + '').data('kendoDropDownList'), $prevDropDown.value(), 'remove', RemoveItem);
+                        prevCounter--;
+                    })
+                }
+            }
+        };
+
+        // CORRECT EXISTING DDL DATA
+        function CorrectDdlData(object, correctionData, correctionType, correctDataFunc) {
+
+            switch (correctionType) {
+                case 'add':
+                    correctDataFunc(object, correctionData);
+                    break;
+                case 'remove':
+                    correctDataFunc(object, correctionData);
+                    break;
+                default:
+                    alert('Wielki chuj');
+            }
+        };
+
+        //REMOVE CHOOSEN BOOKS DATA
+        function RemoveItem(object, dataToRemove) {
+            var data = object.dataSource.data(),
+                length = data.length,
+                dataItem,
+                dataToRemoveItem,
+                i;
+
+            //ITERATE AND REMOVE ITEMS
+            if (dataToRemove instanceof HashTable) {
+                for (i = length - 1; i >= 0; i--) {
+                    dataToRemove.each(function (k, v) {
+
+                        if (k == data[i].BookId) {
+                            dataItem = data[i];
+                            object.dataSource.remove(dataItem);
+                        }
+                    })
+                }
+            } else {
+                for (i = length - 1; i >= 0; i--) {
+
+                    if (dataToRemove == data[i].BookId) {
+                        dataItem = data[i];
+                        object.dataSource.remove(dataItem);
+                    }
+                }
+            }
+        };
+
+        //ADD BOOKS TO DDL-BOOK DATA
+        function AddItem(object, dataToAdd) {
+            var data = object.dataSource.data(),
+                length = data.length,
+                dataItem,
+                dataToAddItem,
+                i;
+
+            //ADD ITEMS
+            object.dataSource.add({
+                BookId: dataToAdd.value,
+                Title: dataToAdd.text
+            });
+        };
+
+        //COPY BOOKS BETWEEN DATASOURCES
+        function CopyItem(from, to) {
+            var data = from.dataSource.data(),
+                length = from.dataSource.total(),
+                i;
+            for (i = 0; i < length; i++) {
+                to.dataSource.add(data[i]);
+            }
+        }
+
+        //CHOOSEN BOOKS DICTIONARY
+        function HashTable(obj) {
+            this.items = {};
+            this.length = 0;
+
+            if (obj) {
+                for (var p in obj) {
+                    if (obj.hasOwnProperty(p)) {
+                        this.items[p] = obj[p];
+                        this.length++;
+                    }
+                }
+            };
+
+            this.getItem = function (key) {
+                return this.hasItem(key) ? this.items[key] : undefined;
+            };
+
+            this.setItem = function (key, value) {
+                var previous = undefined;
+                if (this.hasItem(key)) {
+                    previous = this.items[key];
+                } else {
+                    this.length++;
+                }
+                this.items[key] = value;
+                return previous;
+            };
+
+            this.hasItem = function (key) {
+                return this.items.hasOwnProperty(key);
+            };
+
+            this.removeItem = function (key) {
+                if (this.hasItem(key)) {
+                    previous = this.items[key];
+                    this.lenght--;
+                    delete this.items[key];
+                    return previous;
+                } else {
+                    return undefined;
+                }
+            }
+
+            this.keys = function () {
+                var keys = [];
+                for (var k in this.items) {
+                    if (this.hasItem(k)) {
+                        keys.push(k);
+                    }
+                }
+                return keys;
+            }
+
+            this.values = function () {
+                var values = [];
+                for (var k in this.items) {
+                    if (this.hasItem(k)) {
+                        values.push(this.items[k]);
+                    }
+                }
+                return values;
+            }
+
+            this.each = function (fn) {
+                for (var k in this.items) {
+                    if (this.hasItem(k)) {
+                        fn(k, this.items[k]);
+                    }
+                }
+            }
+
+            this.clear = function () {
+                this.items = {};
+                this.length = 0;
+            }
+        };
+    });
+
+</script>
