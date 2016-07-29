@@ -72,6 +72,7 @@
     <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelUser.cs" />
     <Compile Include="BorrowModel\Contracts\ViewModels\BorrowViewModelUserBooks.cs" />
     <Compile Include="BorrowModel\IBorrowService.cs" />
+    <Compile Include="DictBookGenreModel\Contracts\ViewModels\DictBookGenreViewModel.cs" />
     <Compile Include="RaportModel\Contracts\DTOs\RaportDTO.cs" />
     <Compile Include="RaportModel\Contracts\ViewModels\RaportViewModelGenres.cs" />
     <Compile Include="RaportModel\IRaportService.cs" />

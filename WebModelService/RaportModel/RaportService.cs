@@ -66,64 +66,50 @@ namespace WebModelService.RaportModel
             return genresList.ToList();
         }
 
-        public IQueryable<RaportViewModelBooks>GetFilteredBooksRaport(string genre, string title, DateTime fromDate, DateTime toDate)
+        public IQueryable<RaportViewModelBooks>GetFilteredBooksRaport(int? genre, string title, DateTime? fromDate, DateTime? toDate)
         {
-            IQueryable<RaportViewModelBooks> bookFilteredRaportQuery;
+            var query = from books in context.Books select books;
 
-            if ( string.IsNullOrWhiteSpace(genre) && string.IsNullOrWhiteSpace(title))
-            {
-                bookFilteredRaportQuery =  (from books in context.Books
-                                            join borrows in context.Borrows.Where(b => b.FromDate <= fromDate && b.ToDate <= toDate)
-                                                    on books.BookId equals borrows.BookId 
-                                            into borrowedCount
-                                            from borrowedTemp in borrowedCount.GroupBy(x => x.BookId)
-                                            select new RaportViewModelBooks
-                                            {
-                                                BookId = books.BookId,
-                                                Title = books.Title,
-                                                Author = books.Author,
-                                                ISBN = books.ISBN,
-                                                Genre = books.BookGenreId,
-                                                BorrowsCount = borrowedCount.Count()
-                                            }).OrderByDescending(x => x.BorrowsCount);
+            if (genre.HasValue)
+            {               
+                query = from books in query
+                        where books.BookGenreId == genre
+                        select books;
             }
-            else if( string.IsNullOrWhiteSpace(genre) && !(string.IsNullOrWhiteSpace(title)))
+            if (!string.IsNullOrWhiteSpace(title))
             {
-                bookFilteredRaportQuery =  (from books in context.Books.Where(b => b.Title.Contains(title))
-                                            join borrows in context.Borrows.Where(b => b.FromDate <= fromDate && b.ToDate <= toDate)
-                                                                            on books.BookId equals borrows.BookId 
-                                            into borrowedCount
-                                            from borrowedTemp in borrowedCount.GroupBy(x => x.BookId)
-                                            select new RaportViewModelBooks
-                                            {
-                                                BookId = books.BookId,
-                                                Title = books.Title,
-                                                Author = books.Author,
-                                                ISBN = books.ISBN,
-                                                Genre = books.BookGenreId,
-                                                BorrowsCount = borrowedCount.Count()
-                                            }).OrderByDescending(x => x.BorrowsCount);
+                query = from books in query
+                        where books.Title.Contains(title)
+                        select books;
             }
-            else
+            if (fromDate.HasValue)
             {
-                var genreInt = Int32.Parse(genre);
+                query = from books in query
+                        where books.AddDate >= fromDate
+                        select books;
+            }
+            if (toDate.HasValue)
+            {
+                query = from books in query
+                        where books.AddDate <= toDate
+                        select books;
+            }
 
-                bookFilteredRaportQuery =  (from books in context.Books.Where(b => b.BookGenreId == genreInt && b.Title.Contains(title))
-                                            join borrows in context.Borrows.Where(b => b.FromDate <= fromDate && b.ToDate <= toDate)
-                                                            on books.BookId equals borrows.BookId into borrowedCount
-                                            from borrowedTemp in borrowedCount.GroupBy(x => x.BookId)
-                                            select new RaportViewModelBooks
-                                            {
-                                                BookId = books.BookId,
-                                                Title = books.Title,
-                                                Author = books.Author,
-                                                ISBN = books.ISBN,
-                                                Genre = books.BookGenreId,
-                                                BorrowsCount = borrowedCount.Count()
-                                            }).OrderByDescending(x => x.BorrowsCount);
-            }
-                       
-            return bookFilteredRaportQuery;
+            var filteredBooks = from books in query
+                                join genres in context.DictBookGenres on books.BookGenreId equals genres.BookGenreId
+                                orderby books.Borrows.Count descending
+                                select new RaportViewModelBooks
+                                {
+                                    BookId = books.BookId,
+                                    Author = books.Author,
+                                    Title = books.Title,
+                                    ISBN = books.ISBN,
+                                    Add = books.AddDate,
+                                    Genre = books.BookGenreId,
+                                    BorrowsCount = books.Borrows.Count
+                                };
+
+            return filteredBooks;            
         }
     }
 }

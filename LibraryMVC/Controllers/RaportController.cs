@@ -41,19 +41,20 @@ namespace LibraryMVC.Controllers
             return PartialView("BooksRaportIndex", model);
         }
 
+        //GET: Books List
+        [HttpGet]
+        public JsonResult GetBooksRaport()
+        {
+            var query = this.raportService.GetBooksRaport();
+            return Json(query, JsonRequestBehavior.AllowGet);
+        }
+
         //POST: Books List
         [HttpPost]
-        public JsonResult GetBooksRaport([DataSourceRequest] DataSourceRequest request, string genre, string title, DateTime? fromDate, DateTime? toDate)
+        public JsonResult GetBooksRaport([DataSourceRequest] DataSourceRequest request, int? genre, string title, DateTime? fromDate, DateTime? toDate)
         {
-            if (!fromDate.HasValue)
-            {
-                return Json(this.raportService.GetBooksRaport(), JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                var query = this.raportService.GetFilteredBooksRaport(genre, title, fromDate.Value, toDate.Value).ToDataSourceResult(request);
-                return Json(query);
-            }
+            var query = this.raportService.GetFilteredBooksRaport(genre, title, fromDate, toDate).ToDataSourceResult(request);
+            return Json(query);
         }
 
         //POST: Users List

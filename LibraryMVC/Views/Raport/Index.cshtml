@@ -18,31 +18,42 @@
 
     function filterGrid() {
         var genre,
-        title,
-        fromDate,
-        todate,
-        $comboBox,
-        $textBox;
+            title,
+            fromDate,
+            todate;
 
-        debugger;
-
-        comboBox = $('#combobox').data('kendoComboBox').value();
-        textBox = $('#textbox').val();
-        fromDate = $('#datepicker1').data('kendoDatePicker').value();
-        toDate = $('#datepicker2').data('kendoDatePicker').value();
-
-        genre = comboBox ? comboBox : ' ';
-        title = textbox ? textBox : ' ';
+        genre = $('#combobox').val();
+        title = $('#textbox').val();
+        fromDate = $('#datepicker1').val();
+        toDate = $('#datepicker2').val();
 
         return { genre: genre, title: title, fromDate: fromDate, toDate: toDate };
     }
 
     $(function () {
                 
-        $(document).delegate('#btn-reset-books-grid', 'click', function () {
+        $(document).delegate('#btn-filter-books-grid', 'click', function () {
+            alert("Chuj");
             $('#grid-books-raport').data('kendoGrid').dataSource.read();
             $('#grid-books-raport').data('kendoGrid').refresh();
+        })
 
+        $(document).delegate('#btn-reset-filters', 'click', function () {
+            var gridDataSource = $("#grid-books-raport").data("kendoGrid").dataSource,
+                urlGetBooks = '@Url.Action("GetBooksRaport", "Raport")';
+
+            $.get(urlGetBooks, function callback(result) {
+                $.each(result, function (index) {
+                    result[index].Add = result[index].AddDateDisplay;
+                });
+                $("#combobox").data("kendoComboBox").text('');
+                $("#textbox").val("");
+                $("#datepicker1").data("kendoDatePicker").value(null);
+                $("#datepicker2").data("kendoDatePicker").value(null);
+                $('#grid-books-raport').data("kendoGrid").dataSource = new kendo.data.DataSource({ data: result });
+                $('#grid-books-raport').data("kendoGrid").dataSource.read();
+                $('#grid-books-raport').data("kendoGrid").refresh();
+            });
         })
     })
 

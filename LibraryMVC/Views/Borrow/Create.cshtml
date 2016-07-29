@@ -13,7 +13,7 @@
                         .Name("ddl-user")
                         .DataTextField("User")
                         .DataValueField("UserId")
-                        .OptionLabel("-- Select user --")
+                        //.OptionLabel("-- Select user --")
                         //.AutoBind(false)
                         .DataSource(ds =>
                         {
@@ -35,18 +35,18 @@
                         .Name("ddl-book1")
                         .DataTextField("Title")
                         .DataValueField("BookId")
-                        .OptionLabel("-- Select book --")
+                        //.OptionLabel("--  Select book  --")
                         //.AutoBind(false)
                         .DataSource(ds =>
-                        {
-                            ds.Read(read =>
-                            {
-                                read.Action("GetTitles", "Borrow");
-                            });
-                        })
+                         {
+                             ds.Read(read =>
+                             {
+                                 read.Action("GetTitles", "Borrow");
+                             });
+                         })
                         .Events(e =>
                         {
-                            e.Select("OnSelect").Change("OnChange");
+                            e.Select("OnSelect").Change("OnChange").Open("OnOpen");
                         })
                         .HtmlAttributes(new { style = "width:250px" })
                     )

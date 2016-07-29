@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebModelService.DictBookGenreModel.Contracts.ViewModels;
 
 namespace WebModelService.RaportModel.Contracts.ViewModels
 {
@@ -20,7 +21,20 @@ namespace WebModelService.RaportModel.Contracts.ViewModels
 
         public int Genre { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Add { get; set; }
+
+        public string AddDateDisplay
+        {
+            get
+            {
+                return this.Add.ToShortDateString();
+            }
+        }
+
         [Display(Name = "Borrows Count")]
         public int BorrowsCount { get; set; }
+
+        public virtual DictBookGenreViewModel DictBookGenre { get; set; }
     }
 }

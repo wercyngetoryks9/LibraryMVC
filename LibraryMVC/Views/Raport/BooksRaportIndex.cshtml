@@ -10,8 +10,8 @@
             columns.Bound(book => book.Title);
             columns.Bound(book => book.ISBN);
             columns.Bound(book => book.Genre);
-            columns.Bound(book => book.BorrowsCount
-            );
+            columns.Bound(book => book.Add).Template(x => x.AddDateDisplay).Width(100);
+            columns.Bound(book => book.BorrowsCount);
         })
         .Scrollable()
         .Groupable()
@@ -28,5 +28,5 @@
         )
 )
 <div>
-    <input type="button" id="btn-reset-books-grid" value="Reset" class="btn btn-default" />
+    <input type="button" id="btn-reset-filters" value="Reset" class="btn btn-default" />
 </div>

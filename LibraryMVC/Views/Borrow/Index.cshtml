@@ -81,7 +81,11 @@
 <div id="window-container">
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript"> 
+    var previousValue,
+        previousText,
+        currentValue,
+        currentDataItem;
 
     // TEMPLATES
     function btnBookReturnTemplate(data) {
@@ -99,15 +103,49 @@
         return html;
     };
 
-    //WINDOW EVENTS
-    function OnSelect(e) {
-        //var dataItem = this.dataItem(e.item.index()+1);
-        //alert("event :: select (" + dataItem.Title + " : " + dataItem.BookId + ")");
-    };
+    //$("body").click(function (event) {
+    //    $("#log").html("clicked: " + event.target.nodeName);
+    //});
 
-    function OnChange(e) {
+    function OnOpen(e) {
+        previousValue = this.value();
+        previousText = this.text();
+    }
+
+    function OnSelect(e) {
         //var dataItem = this.dataItem(e.item.index());
         //alert("event :: change (" + dataItem.text + " : " + dataItem.value + ")");
+    }
+
+    //WINDOW EVENTS
+    function OnChange(e) {
+        currentValue = this.value();
+
+        //debugger;
+        if (currentValue == previousValue) {
+            alert('to samo');
+        }
+        else {
+            $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
+                tempValue = $(this).val();
+
+                if (tempValue == currentValue) {
+                    currentDataItem = $(this).data('kendoDropDownList').dataItem();
+                    return false;
+                }
+            })
+            $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
+                tempValue = $(this).val();
+
+                if (tempValue == currentValue) { }
+                else {
+                    $(this).data('kendoDropDownList').dataSource.remove(currentDataItem);
+                    $(this).data('kendoDropDownList').dataSource.add({
+                        BookId: previousValue, Title: previousText
+                    });
+                }
+            })
+        }
     };
 
     //TEMPLATE FUNCTIONS
@@ -188,6 +226,7 @@
 
         //////////////////////////////////////// CREATE FUNCTIONS /////////////////////////////////////////////
 
+        // ADD DDL
         $(document).delegate('#btn-add-ok', 'click', function () {
             var urlAdd = '@Url.Action("Create", "Borrow")',
                 BookId = [],
@@ -206,11 +245,17 @@
             $('#grid-users').data('kendoGrid').dataSource.read().refresh();
         });
 
+        // CLOSE WINDOW
         $(document).delegate('#btn-add-cancel', 'click', function () {
             $(this).closest('#window').data('kendoWindow').content('').close();
             counter = 2;
+            previousValue = null;
+            previousText = null;
+            currentValue = null;
+            currentDataItem = null;
         });
 
+        // REMOVE DDL
         $(document).delegate('#btn-remove-ddl-book', 'click', function () {
             var object;
 
@@ -289,8 +334,8 @@
                 counter++;
             }
 
-            hashTSelectedBooks.each(function (k, v) {
-            });
+            //hashTSelectedBooks.each(function (k, v) {
+            //});
         });
 
         //ADD NEW DDL-BOOK CONTENT
@@ -298,6 +343,7 @@
             var dataBooks,
                 type = 'kendoDropDownList',
                 currDropDownId = '#ddl-book' + num,
+                prevDropDownId = '#ddl-book' + (num - 1),
                 $prevDropDown = $('#ddl-book' + (num - 1)).data('kendoDropDownList'),
                 url = '@Url.Action("GetTitles", "Borrow")',
                 tableBorrow = '#table-remove-books',
@@ -322,7 +368,7 @@
                 //},
                 dataTextField: "Title",
                 dataValueField: "BookId",
-                optionLabel: "-- Select book --",
+                //optionLabel: "-- Select book --",
                 animation: {
                     open: {
                         effects: "fadeIn zoom:in",
@@ -332,8 +378,10 @@
                         effects: "fadeOut zoom:out",
                         duration: 300
                     }
-                }
-                //select: OnSelect,
+                },
+                select: OnSelect,
+                change: OnChange,
+                open: OnOpen
                 //change: OnChange
                 //deactivate: function () {
                 //    this.content("");
@@ -347,16 +395,20 @@
             CopyItem($prevDropDown, $currDropDown);
             CorrectDdlData($currDropDown, hashTSelectedBooks, 'remove', RemoveItem);
 
-            if (counter > 2) {
-                var prevCounter = counter - 2;
+            $currDropDown.select(0);
 
-                for(var i = prevCounter; i >= 0; i--) {
+            if (counter >= 2) {
+                var prevCounter = counter - 1;
+
+                for(var i = prevCounter; i > 0; i--) {
                     $('#table-borrow-books').find('[id="ddl-book' + prevCounter + '"]').each(function() {
 
-                        CorrectDdlData($('#ddl-book' + prevCounter + '').data('kendoDropDownList'), $prevDropDown.value(), 'remove', RemoveItem);
+                        //CorrectDdlData($('#ddl-book' + prevCounter).data('kendoDropDownList'), $prevDropDown.value(), 'remove', RemoveItem);
+                        CorrectDdlData($('#ddl-book' + prevCounter).data('kendoDropDownList'), $currDropDown.value(), 'remove', RemoveItem);
+                        alert($currDropDown.value());
                         prevCounter--;
-                    })
-                }
+                    })                    
+                }               
             }
         };
 

@@ -12,6 +12,6 @@ namespace WebModelService.RaportModel
         IList<RaportViewModelBooks> GetBooksRaport();
         IList<RaportViewModelUsers> GetUsersRaport();
         IList<RaportViewModelGenres> GetGenresRaport();
-        IQueryable<RaportViewModelBooks> GetFilteredBooksRaport(string genre, string title, DateTime fromDate, DateTime toDate);
+        IQueryable<RaportViewModelBooks> GetFilteredBooksRaport(int? genre, string title, DateTime? fromDate, DateTime? toDate);
     }
 }
