@@ -123,7 +123,6 @@
 
         //debugger;
         if (currentValue == previousValue) {
-            alert('to samo');
         }
         else {
             $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
@@ -259,33 +258,19 @@
         $(document).delegate('#btn-remove-ddl-book', 'click', function () {
             var object;
 
-            if (removedDdls == 1) {
-
+            if (counter > 2) {
                 object = $('#table-borrow-books tr:last').find('[id^="ddl-book"]').data('kendoDropDownList');
                 bookToAdd.value = object.value();
-                bookToAdd.text = object.text();
+                bookToAdd.text = object.text();            
 
-                if (counter > 2) {
-
-                    $('#table-borrow-books tr:last').remove();
-                    counter--;
-                }
+                $('#table-borrow-books tr:last').remove();
+                counter--;
 
                 $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
 
                     object = $(this).data('kendoDropDownList');
                     CorrectDdlData(object, bookToAdd, 'add', AddItem);
                 });
-
-                removedDdls--;
-            }
-            else {
-                if (counter > 2) {
-
-                    $('#table-borrow-books tr:last').remove();
-                    counter--;
-                }
-                removedDdls++;
             }
         });
 
