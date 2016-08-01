@@ -128,9 +128,7 @@
     function OnChange(e) {
         currentValue = this.value();
 
-        //debugger;
-        if (currentValue == previousValue) {
-        }
+        if (currentValue == previousValue) { }
         else {
             $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
                 tempValue = $(this).val();
@@ -139,19 +137,37 @@
                     currentDataItem = $(this).data('kendoDropDownList').dataItem();
                     return false;
                 }
-            })
+            });
+
+            var data;
+            var dataItem;
+
             $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
                 tempValue = $(this).val();
 
+                debugger;
                 if (tempValue == currentValue) { }
                 else {
-                    $(this).data('kendoDropDownList').dataSource.remove(currentDataItem);
+                    data = $(this).data('kendoDropDownList').dataSource.data();
+
+                    for (i = data.length - 1; i >= 0; i--) {
+                        dataItem = data[i];
+                        if (dataItem.BookId == currentValue) {
+                            $(this).data('kendoDropDownList').dataSource.remove(dataItem);
+                        }
+                    }
+
                     $(this).data('kendoDropDownList').dataSource.add({
                         BookId: previousValue, Title: previousText
                     });
                 }
             })
         }
+
+        previousValue = null;
+        previousText = null;
+        currentDataItem = null;
+        currentValue = null;
     };
 
     //TEMPLATE FUNCTIONS
@@ -271,8 +287,8 @@
                 bookToAdd.value = object.value();
                 bookToAdd.text = object.text();            
 
-                //$('#table-borrow-books tr:last').remove();
-                //counter--;
+                $('#table-borrow-books tr:last').remove();
+                counter--;
 
                 $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
 
@@ -280,8 +296,8 @@
                     CorrectDdlData(object, bookToAdd, 'add', AddItem);
                 });
 
-                $('#table-borrow-books tr:last').remove();
-                counter--;
+                //$('#table-borrow-books tr:last').remove();
+                //counter--;
             }
         });
 
