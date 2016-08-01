@@ -271,14 +271,17 @@
                 bookToAdd.value = object.value();
                 bookToAdd.text = object.text();            
 
-                $('#table-borrow-books tr:last').remove();
-                counter--;
+                //$('#table-borrow-books tr:last').remove();
+                //counter--;
 
                 $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
 
                     object = $(this).data('kendoDropDownList');
                     CorrectDdlData(object, bookToAdd, 'add', AddItem);
                 });
+
+                $('#table-borrow-books tr:last').remove();
+                counter--;
             }
         });
 
