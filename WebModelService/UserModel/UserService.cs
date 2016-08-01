@@ -177,5 +177,17 @@ namespace WebModelService.UserModel
                 return userDetailList.ToList();
             };
         }
+
+        public bool EmailExist(int userId, string email)
+        {
+            using (DataService.EntityModel context = new DataService.EntityModel())
+            {
+                var emailValidationResult = (from users in context.Users
+                                            where object.Equals(users.Email, email) && users.UserId != userId
+                                            select users.Email).SingleOrDefault();
+
+                return emailValidationResult == null ? false : true;
+            };
+        }
     }
 }

@@ -19,5 +19,6 @@ namespace WebModelService.UserModel
         void AddUser(UserViewModelCreate user);
         void EditUser(UserViewModelEdit user);
         void DeleteUser(int id);
+        bool EmailExist(int userId, string email);
     }
 }

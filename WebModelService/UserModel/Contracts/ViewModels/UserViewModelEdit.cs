@@ -28,7 +28,7 @@ namespace WebModelService.UserModel.Contracts.ViewModels
         public DateTime BirthDate { get; set; }
 
         [Required]
-        [EmailValidation(ErrorMessage = "The Email Address already exists"), StringLength(100)]
+        //[EmailValidation(ErrorMessage = "The Email Address already exists"), StringLength(100)]
         [RegularExpression("^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*\\.([a-z]{2,4})$", ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
 

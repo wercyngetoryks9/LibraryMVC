@@ -19,16 +19,17 @@ namespace WebModelService.RaportModel.Contracts.ViewModels
 
         public string ISBN { get; set; }
 
-        public int Genre { get; set; }
+        public string Genre { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Add { get; set; }
+        public DateTime Add
+        { get; set; }
 
         public string AddDateDisplay
         {
             get
             {
-                return this.Add.ToShortDateString();
+                return this.Add == null ? "-" : this.Add.ToShortDateString(); 
             }
         }
 

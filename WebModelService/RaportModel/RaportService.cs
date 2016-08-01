@@ -19,6 +19,7 @@ namespace WebModelService.RaportModel
 
         public IList<RaportViewModelBooks> GetBooksRaport()
         {
+            /*
             var bookRaportList = (from books in context.Books
                                  join borrows in context.Borrows on books.BookId equals borrows.BookId into borrowedCount
                                  from borrowedTemp in borrowedCount.GroupBy(x => x.BookId) 
@@ -28,9 +29,27 @@ namespace WebModelService.RaportModel
                                      Title = books.Title,
                                      Author = books.Author,
                                      ISBN = books.ISBN,
-                                     Genre = books.BookGenreId,
+                                     Add = books.AddDate,
+                                     Genre = books.BookGenreId,                                
                                      BorrowsCount = borrowedCount.Count()
                                  }).OrderByDescending(x => x.BorrowsCount);
+
+            return bookRaportList.ToList();
+            */
+
+            var bookRaportList = from books in context.Books
+                                 join genres in context.DictBookGenres on books.BookGenreId equals genres.BookGenreId
+                                 orderby books.Borrows.Count descending
+                                 select new RaportViewModelBooks
+                                  {
+                                      BookId = books.BookId,
+                                      Title = books.Title,
+                                      Author = books.Author,
+                                      ISBN = books.ISBN,
+                                      Add = books.AddDate,
+                                      Genre = genres.Name,
+                                      BorrowsCount = books.Borrows.Count
+                                  };
 
             return bookRaportList.ToList();
         }
@@ -105,7 +124,7 @@ namespace WebModelService.RaportModel
                                     Title = books.Title,
                                     ISBN = books.ISBN,
                                     Add = books.AddDate,
-                                    Genre = books.BookGenreId,
+                                    Genre = genres.Name,
                                     BorrowsCount = books.Borrows.Count
                                 };
 

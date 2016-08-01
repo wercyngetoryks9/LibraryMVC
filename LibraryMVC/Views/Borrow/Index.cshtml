@@ -38,7 +38,7 @@
             .Ajax()
             .Model(model => model.Id(borrow => borrow.BorrowId))
             .Read(read => read.Action("BooksIndex", "Borrow"))
-            .PageSize(20)
+            .PageSize(20)           
         )
 )
 
@@ -107,6 +107,14 @@
     //    $("#log").html("clicked: " + event.target.nodeName);
     //});
 
+    
+    //WINDOW EVENTS
+
+    function OnActivate(e) {
+    }
+
+    //DROPDOWNLIST EVENTS 
+
     function OnOpen(e) {
         previousValue = this.value();
         previousText = this.text();
@@ -117,7 +125,6 @@
         //alert("event :: change (" + dataItem.text + " : " + dataItem.value + ")");
     }
 
-    //WINDOW EVENTS
     function OnChange(e) {
         currentValue = this.value();
 
@@ -210,7 +217,8 @@
                             actions: ["Minimize", "Maximize"],
                             modal: true,
                             visible: false,
-                            content: url
+                            content: url,
+                            activate: OnActivate
                             //deactivate: function () {
                             //    this.content("");
                                 //this.destroy();
@@ -240,8 +248,8 @@
             $.post(url, model);
 
             $(this).closest('#window').data('kendoWindow').content('').close();
-            $('#grid-books').data('kendoGrid').dataSource.read().refresh();
-            $('#grid-users').data('kendoGrid').dataSource.read().refresh();
+            $('#grid-books').data('kendoGrid').dataSource.read();
+            $('#grid-users').data('kendoGrid').refresh();
         });
 
         // CLOSE WINDOW
@@ -276,38 +284,19 @@
 
         $(document).delegate('#btn-add-ddl-book', 'click', function () {
 
-            // DDL USER VALIDATE
-            if ($('#ddl-user').data('kendoDropDownList').value() == 0) {
-                $('#validSpan').text("Please select user").css('color', 'red');
+            temp = $('#ddl-book' + (counter - 1)).data('kendoDropDownList').dataSource.total();
+            if (temp == 1) {
                 return false;
-            }
-            else {
-                $('#validSpan').text("");
-            }
+            } else {
 
-            //DDL BOOKS VALIDATE
-            validationPassed = 1;
-            hashTSelectedBooks = new HashTable('');
+                hashTSelectedBooks = new HashTable('');
 
-            $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
-                var value = $(this).val(),
-                    text;
+                $('#table-borrow-books').find('[id^="ddl-book"]').each(function () {
+                    var value = $(this).val(),
+                        text = $(this).data('kendoDropDownList').text();
 
-                if (value == 0) {
-                    $('#validSpan').text("Please select books to continue").css('color', 'red');
-                    validationPassed = 0;
-                    hashTSelectedBooks.clear();
-                    return false;
-                }
-                else {
-                    text = $(this).data('kendoDropDownList').text();
                     hashTSelectedBooks.setItem(value, text);
-                }
-            });
-
-            if (validationPassed) {
-
-                $('#validSpan').text("");
+                });
 
                 // APPEND NEW ROW WITH NEW DDL-BOOK VALUE
                 var lastSelector = "#ddl-book" + counter;
@@ -318,9 +307,6 @@
                 AddDropDownList(counter);
                 counter++;
             }
-
-            //hashTSelectedBooks.each(function (k, v) {
-            //});
         });
 
         //ADD NEW DDL-BOOK CONTENT
@@ -388,9 +374,7 @@
                 for(var i = prevCounter; i > 0; i--) {
                     $('#table-borrow-books').find('[id="ddl-book' + prevCounter + '"]').each(function() {
 
-                        //CorrectDdlData($('#ddl-book' + prevCounter).data('kendoDropDownList'), $prevDropDown.value(), 'remove', RemoveItem);
                         CorrectDdlData($('#ddl-book' + prevCounter).data('kendoDropDownList'), $currDropDown.value(), 'remove', RemoveItem);
-                        alert($currDropDown.value());
                         prevCounter--;
                     })                    
                 }               
@@ -458,6 +442,7 @@
         };
 
         //COPY BOOKS BETWEEN DATASOURCES
+        // return count of from elements
         function CopyItem(from, to) {
             var data = from.dataSource.data(),
                 length = from.dataSource.total(),

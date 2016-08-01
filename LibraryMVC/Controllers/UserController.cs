@@ -60,10 +60,10 @@ namespace LibraryMVC.Controllers
         [HttpPost]
         public ActionResult Edit(UserViewModelEdit user)
         {
-            //if (EmailExist(user.Email))
-            //{
-            //    ModelState.AddModelError("Emial", "Emial already in use");
-            //}
+            if (this.userService.EmailExist(user.UserId, user.Email))
+            {
+                ModelState.AddModelError("Email", "Email already in use");
+            }
 
             if (ModelState.IsValid)
             {
